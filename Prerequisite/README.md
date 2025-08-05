@@ -84,13 +84,29 @@ airflow tasks test example_bash_operator runme_0 2024-01-01
 - Stop Airflow (`Ctrl+C`)
 - Edit `airflow/airflow.cfg`
 - Find `load_examples = True` and change to `False`
-- Run `airflow db reset`
+- Run `airflow db reset` (y option)
+- Restart Airflow with `airflow standalone`
 
 ## 🆘 Need Help?
 
 Contact the workshop instructor or organizer if you encounter any issues!
 
+## 🎯 Final Step: Ready for Workshop
+
+**You can now turn off Airflow:**
+- Press `Ctrl+C` in your terminal to stop Airflow
+
+**When the workshop starts, restart with:**
+```bash
+cd airflow-workshop
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+export AIRFLOW_HOME=$(pwd)/airflow
+airflow standalone
+```
+
+🎉 **You're all set for the workshop!**
+
 ---
 
-> **� Want more details?** Check out our [comprehensive installation guide](DETAILED_SETUP.md) for troubleshooting and advanced options.
+> **📖 Want more details?** Check out our [comprehensive installation guide](DETAILED_SETUP.md) for troubleshooting and advanced options.
 
