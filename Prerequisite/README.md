@@ -53,9 +53,6 @@ uv add "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
 # Set Airflow home directory
 export AIRFLOW_HOME=$(pwd)/airflow
 
-# Disacble example dags
-AIRFLOW__CORE__LOAD_EXAMPLES=False
-
 # Start Airflow
 airflow standalone
 ```
