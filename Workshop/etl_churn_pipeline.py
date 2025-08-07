@@ -9,6 +9,13 @@ import os
 import time
 from sklearn.preprocessing import LabelEncoder
 
+# Environment variable configuration
+BIGQUERY_PROJECT_ID = os.getenv('BIGQUERY_PROJECT_ID', 'workshop-airflow-468305')
+BIGQUERY_DATASET_ID = os.getenv('BIGQUERY_DATASET_ID', 'bank_data')
+BIGQUERY_TABLE_ID = os.getenv('BIGQUERY_TABLE_ID', 'preprocessed_customer_churn')
+GOOGLE_SHEETS_URL = os.getenv('GOOGLE_SHEETS_URL', 'https://docs.google.com/spreadsheets/d/17-5IHQzbn8rlPM29lYwuBjrz8RrQJyHQ/edit?usp=sharing&ouid=112054943148298379262&rtpof=true&sd=true')
+GOOGLE_SHEETS_SHEET_NAME = os.getenv('GOOGLE_SHEETS_SHEET_NAME', 'bank_customer_data')
+
 # Default arguments for the DAG
 default_args = {
     'owner': 'airflow',
@@ -32,8 +39,8 @@ dag = DAG(
 
 def load_data_from_sheets(**context):
     """Load data from Google Sheets"""
-    url = "https://docs.google.com/spreadsheets/d/17-5IHQzbn8rlPM29lYwuBjrz8RrQJyHQ/edit?usp=sharing&ouid=112054943148298379262&rtpof=true&sd=true"
-    sheet_name = 'bank_customer_data'
+    url = GOOGLE_SHEETS_URL
+    sheet_name = GOOGLE_SHEETS_SHEET_NAME
     
     file_id = url.split('/d/')[1].split('/edit')[0]
     export_url = f'https://docs.google.com/spreadsheets/d/{file_id}/export?format=xlsx'
@@ -112,9 +119,9 @@ def upload_to_bigquery(**context):
     df = pd.read_csv(preprocessed_path)
     
     # BigQuery configuration
-    project_id = "workshop-airflow-468305"
-    dataset_id = "bank_data"
-    table_id = "preprocessed_customer_churn"
+    project_id = BIGQUERY_PROJECT_ID
+    dataset_id = BIGQUERY_DATASET_ID
+    table_id = BIGQUERY_TABLE_ID
     
     # Set up BigQuery client
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/opt/airflow/key.json"
