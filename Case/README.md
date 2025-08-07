@@ -135,20 +135,38 @@ Be prepared for these data quality issues:
 - **Randomized column order**
 - **Inconsistent schemas across sources**
 
+## Workshop Objective
+
+Your ultimate goal is to build a complete **Extract, Transform, Load (ETL)** pipeline that:
+
+1. **Extracts** weather data from all 4 distributed storage systems
+2. **Transforms** the data by cleaning, normalizing, and combining it
+3. **Loads** the final unified dataset into a **PostgreSQL database**
+
+### Final Destination: PostgreSQL Database
+
+After successfully collecting and transforming data from all sources, you must load the cleaned dataset into a PostgreSQL database. The target database connection details and required table schema will be provided during the workshop session.
+
+**Loading Requirements:**
+- All continent data must be combined into a single table
+- Data must be properly cleaned and validated before loading
+- Ensure data types are consistent with the target schema
+
+*Note: The specific database connection details and target table columns will be revealed during the workshop to maintain the challenge level.*
+
 ## 🏆 Success Criteria
 
 Your pipeline should:
-1. ✅ Collect data from all 4 storage systems
+1. ✅ Collect data from all storage systems
 2. ✅ Handle different data formats correctly
-3. ✅ Clean and normalize the data
+3. ✅ Clean the data
 4. ✅ Combine into a unified dataset
-5. ✅ Load into the target destination efficiently
+5. ✅ Load into the PostgreSQL target database efficiently
 
 ## 🚨 Important Notes
 
 - **Read-only access**: You cannot modify source data
 - **Time constraint**: Work efficiently and quickly
-- **Error handling**: Implement proper exception handling
 - **Documentation**: Document your approach and solutions
 - **Performance**: Consider chunking for large datasets
 
