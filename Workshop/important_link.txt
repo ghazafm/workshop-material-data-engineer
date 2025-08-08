@@ -1,0 +1,19 @@
+[IMPORTANT LINKS]
+
+sheet data customer bank
+https://docs.google.com/spreadsheets/d/17-5IHQzbn8rlPM29lYwuBjrz8RrQJyHQ/edit?usp=drive_link&ouid=112054943148298379262&rtpof=true&sd=true
+
+template colab ai training
+https://colab.research.google.com/drive/1J2Mnj7Ap969EY0UDmfbYxUHFPSf96j3o?usp=sharing
+
+looker studio
+https://lookerstudio.google.com/navigation/reporting
+
+big query console
+https://console.cloud.google.com/bigquery
+
+ppt canva
+https://www.canva.com/design/DAGu01NaQxQ/G2GJVd3OaB2QcpxIboT4sw/view?utm_content=DAGu01NaQxQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3c3b0b8592
+
+resource
+https://github.com/ghazafm/workshop-material-data-engineer
