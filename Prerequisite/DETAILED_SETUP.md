@@ -1,89 +1,220 @@
 # 🚀 Welcome to the Data Engineering Workshop!
 ## Apache Airflow Installation Guide
 
-Welcome to our **Data Engineering Workshop**! This comprehensive guide will help you install **Apache Airflow 3.0.3** using `uv`, a fast and modern Python package manager that's significantly faster than traditional `pip`.
+Welcome to our **Data Engineering Workshop**! This comprehensive guide provides detailed instructions for installing **Apache Airflow 3.0.3** using two different approaches.
 
 > **🎯 Workshop Goal:** By the end of this installation, you'll have a fully functional Airflow environment ready for our hands-on data engineering exercises.
 
-> **Why uv?** `uv` is 10-100x faster than pip and provides better dependency resolution, making your Airflow installation smoother and more reliable - perfect for our workshop environment!
+## 🔍 Installation Methods Overview
 
-## 📋 Prerequisites
+We offer **two installation methods** with different trade-offs:
 
-Before we begin, ensure you have:
+| Method | Pros | Cons | Best For |
+|--------|------|------|----------|
+| **Docker** 🐳 | ✅ Cross-platform consistency<br>✅ No dependency conflicts<br>✅ Easy cleanup<br>✅ Pre-configured environment | ⚠️ Uses more resources (RAM/CPU)<br>⚠️ Requires Docker knowledge | **Recommended for all users** |
+| **Local (uv)** 🐍 | ✅ Lower resource usage<br>✅ Direct Python access<br>✅ Faster startup | ⚠️ OS-specific issues<br>⚠️ Dependency conflicts<br>⚠️ Complex troubleshooting | Power users with specific needs |
 
-- ✅ **Python 3.9, 3.10, 3.11, or 3.12** (required for Airflow 3.0.3)
+## 🐳 Method 1: Docker Installation (Recommended)
+
+### Why Docker for Everyone?
+
+Originally, we recommended Docker only for Windows users, but after extensive testing across different platforms, we now **strongly recommend Docker for ALL users** because:
+
+- **🔄 Consistent Experience:** Everyone gets the same environment regardless of OS
+- **⚡ Faster Setup:** No need to worry about Python versions, dependencies, or OS-specific issues  
+- **🧹 Easy Cleanup:** Simply run `docker-compose down` to remove everything
+- **🔧 Pre-configured:** Our optimized docker-compose.yml eliminates unnecessary services
+
+### Resource Usage Note
+
+> **⚠️ Resource Impact:** Docker will use approximately:
+> - **2-4 GB RAM** (vs 1-2 GB for local installation)
+> - **Additional CPU** for containerization overhead
+> - **2-3 GB disk space** for Docker images
+>
+> **💡 Trade-off:** Slightly higher resource usage for significantly better reliability and consistency across all workshop participants.
+
+### Prerequisites for Docker Method
+
+- ✅ **Docker Desktop** installed and running
+- ✅ **8 GB RAM minimum** (16 GB recommended)
 - ✅ **Terminal/Command Prompt** access
-- ✅ **Internet connection** for downloading packages
-- ⏱️ **15-20 minutes** of your time
+- ✅ **Internet connection** for downloading images
+- ⏱️ **10-15 minutes** setup time
 
-> **Note:** We'll install `uv` in the first step if you don't have it yet!
-
-## 🎯 What You'll Learn
-
-By completing this prerequisite setup, you will:
-
-- 🔧 **Install and configure** Apache Airflow 3.0.3 using modern tooling
-- 🐍 **Set up a Python virtual environment** with `uv` for dependency management
-- 🌐 **Access the Airflow web interface** and understand its key components
-
-> **💡 This prerequisite is essential** for all upcoming workshop activities. Make sure to complete it before the workshop begins!
-
-## 🔧 Step 1: Install uv
-
-If you haven't installed `uv` yet, follow the installation instructions:
-
-### macOS and Linux
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-### Windows
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-For more installation options, visit the [uv installation guide](https://docs.astral.sh/uv/getting-started/installation/).
-
-## 📂 Step 2: Set Airflow Home (Optional)
-
-Set the Airflow home directory. By default, Airflow uses `~/airflow`:
+### Docker Installation Steps
 
 ```bash
 export AIRFLOW_HOME=~/airflow
 ```
 
-### 💡 Recommended for This Workshop
+#### Step 1: Install Docker Desktop
+
+**Download and install Docker Desktop:**
+- **Windows:** [Download Docker Desktop for Windows](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
+- **macOS:** [Download Docker Desktop for Mac](https://desktop.docker.com/mac/main/amd64/Docker.dmg) (Intel) or [Apple Silicon](https://desktop.docker.com/mac/main/arm64/Docker.dmg)
+- **Linux:** Follow [Docker Engine installation guide](https://docs.docker.com/engine/install/) for your distribution
+
+**Verify Installation:**
 ```bash
-# Set Airflow home to current project directory
+docker --version
+docker-compose --version
+```
+
+#### Step 2: Download Workshop Files
+
+```bash
+# Create workshop directory
+mkdir airflow-workshop
+cd airflow-workshop
+
+# Download our optimized docker-compose.yml
+# Copy the docker-compose.yml from the Prerequisite folder or download from:
+# https://github.com/ghazafm/workshop-material-data-engineer/blob/master/Prerequisite/docker-compose.yml
+
+# Alternative: Create minimal docker-compose.yml (see below)
+```
+
+#### Step 3: Our Optimized Docker Compose Configuration
+
+Our `docker-compose.yml` is specifically optimized for workshops by removing resource-heavy components:
+
+**✅ What's included:**
+- PostgreSQL database (metadata storage)
+- Airflow API Server (web interface)
+- Airflow Scheduler (DAG processing)  
+- Airflow DAG Processor (separate process for parsing DAGs)
+- Initialization service
+
+**❌ What's removed to save resources:**
+- Celery Worker (not needed for local development)
+- Redis (not needed without Celery)
+- Flower (Celery monitoring - not needed)
+- Additional worker nodes
+
+> **💡 Resource Savings:** Our configuration uses ~40% less RAM and CPU compared to the full Airflow Docker setup.
+
+#### Step 4: Set Environment Variables
+
+```bash
+# For Linux/macOS
+export AIRFLOW_UID=$(id -u)
+
+# For Windows PowerShell
+$env:AIRFLOW_UID=50000
+
+# For Windows Command Prompt
+set AIRFLOW_UID=50000
+```
+
+#### Step 5: Start Airflow Services
+
+```bash
+# Start all services in background
+docker-compose up -d
+
+# Monitor startup progress (optional)
+docker-compose logs -f airflow-init
+
+# Check service status
+docker-compose ps
+```
+
+**Expected Output:**
+```
+NAME                                    STATUS
+airflow-workshop_airflow-apiserver_1    Up (healthy)
+airflow-workshop_airflow-dag-processor_1 Up (healthy) 
+airflow-workshop_airflow-scheduler_1    Up (healthy)
+airflow-workshop_postgres_1             Up (healthy)
+```
+
+#### Step 6: Access Airflow Web Interface
+
+1. **Wait for services to be ready** (2-3 minutes for first startup)
+2. **Open browser:** [http://localhost:8080](http://localhost:8080)
+3. **Login credentials:**
+   - Username: `airflow`
+   - Password: `airflow`
+
+#### Step 7: Verify Installation
+
+```bash
+# List available DAGs
+docker exec $(docker-compose ps -q airflow-scheduler) airflow dags list
+
+# Test a simple command
+docker exec $(docker-compose ps -q airflow-scheduler) airflow version
+```
+
+### Docker Management Commands
+
+```bash
+# Stop all services
+docker-compose down
+
+# Start services
+docker-compose up -d
+
+# View logs
+docker-compose logs airflow-scheduler
+docker-compose logs airflow-apiserver
+
+# Restart specific service
+docker-compose restart airflow-scheduler
+
+# Remove everything (including volumes)
+docker-compose down -v
+```
+
+---
+
+## 🐍 Method 2: Local Installation with uv
+
+> **⚠️ Note:** This method is more complex and can have OS-specific issues. We recommend the Docker method above for most users.
+
+### Prerequisites for Local Method
+
+- ✅ **Python 3.9, 3.10, 3.11, or 3.12** (required for Airflow 3.0.3)
+- ✅ **Terminal/Command Prompt** access
+- ✅ **Internet connection** for downloading packages
+- ⏱️ **20-25 minutes** setup time
+
+### Step 1: Install uv
+
+**macOS and Linux:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Windows:**
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+### Step 2: Set Airflow Home (Optional)
+
+```bash
+# Set Airflow home to current project directory (recommended)
 export AIRFLOW_HOME=$(pwd)/airflow
 ```
 
-> **Why this approach?** This keeps all Airflow files within your project directory, making it easier to manage and clean up later.
-
-## 🐍 Step 3: Create Virtual Environment with uv
-
-Create a new virtual environment for your Airflow project:
+### Step 3: Create Virtual Environment with uv
 
 ```bash
 # Create a new project directory
 mkdir airflow-workshop
 cd airflow-workshop
 
-# Initialize a new uv project with no additional files
+# Initialize a new uv project
 uv init --bare
-
-# Sync the project (creates virtual environment)
 uv sync
 
 # Activate virtual environment
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-> **💡 Pro tip:** Always activate your virtual environment before proceeding to the next steps!
-
-## ⚙️ Step 4: Install Apache Airflow with uv
-
-Install Airflow using constraints to ensure compatibility:
+### Step 4: Install Apache Airflow with uv
 
 ```bash
 # Set Airflow version
@@ -94,9 +225,6 @@ PYTHON_VERSION="$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.v
 
 # Set constraint URL
 CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
-
-# Disable example DAGs by default (Optional)
-AIRFLOW__CORE__LOAD_EXAMPLES=False
 
 # Install Airflow using uv
 uv add "apache-airflow==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
